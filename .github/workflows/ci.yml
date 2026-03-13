@@ -1,0 +1,62 @@
+name: CI (LicenseHub Suite Check)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-test:
+    name: PHP (Laravel) Check
+    runs-on: ubuntu-latest
+    env:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      APP_ENV: testing
+      BCRYPT_ROUNDS: 4
+      CACHE_DRIVER: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, mysql, sqlite, bcmath
+          coverage: none
+
+      - name: Install Backend Dependencies
+        run: |
+          cd api
+          composer install --prefer-dist --no-progress --ignore-platform-reqs
+
+      - name: Prepare Laravel
+        run: |
+          cd api
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Backend Tests
+        run: |
+          cd api
+          # Migrate dan Seed sangat penting karena aplikasi butuh data awal di tabel settings
+          php artisan migrate --seed --force
+          php artisan test
+
+  frontend-test:
+    name: Node (React) Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install & Build
+        run: |
+          cd portal
+          npm install
+          npm run build
