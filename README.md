@@ -92,4 +92,24 @@ For more detailed technical info, please refer to:
 
 ---
 
+## 🤝 How to Contribute
+
+We welcome contributions from the community! Whether you're fixing a bug, adding a feature, or improving documentation, here’s how you can help:
+
+1. **Fork the Repository**: Create your own copy of the project.
+2. **Create a Branch**: Use a descriptive name for your branch (e.g., `feat/add-new-payment-gateway` or `fix/auth-bug`).
+3. **Commit Your Changes**: Follow the [Conventional Commits](https://www.conventionalcommits.org/) style.
+4. **Push to Your Fork**: Upload your changes to your GitHub account.
+5. **Open a Pull Request**: Describe your changes clearly and link any related issues.
+
+### 📜 Coding Standards
+- **Backend (Laravel)**: Follow PSR-12 standards and ensure all tests pass (`php artisan test`).
+- **Frontend (React)**: Use functional components, hooks, and maintain clean Tailwind CSS classes.
+- **Commit Messages**: Use prefixes like `feat:`, `fix:`, `chore:`, or `docs:`.
+
+### 🐞 Reporting Issues
+If you find a bug, please use our [Bug Report Template](https://github.com/3flonet/licensehub-suite/issues/new?template=bug_report.md) to provide as much detail as possible.
+
+---
+
 Developed with ❤️ by **3flo.Net Professional Team**
