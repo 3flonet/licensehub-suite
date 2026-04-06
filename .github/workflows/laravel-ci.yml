@@ -1,0 +1,57 @@
+name: Self-Hosted CI Suite
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # --- BACKEND (Laravel) ---
+  backend-tests:
+    name: Backend (PHP & Tests)
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress
+        working-directory: api
+
+      - name: Lint Code (Pint)
+        run: vendor/bin/pint --test
+        working-directory: api
+
+      - name: Setup Environment & Run Tests
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+          php artisan test
+        working-directory: api
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
+  # --- FRONTEND (React) ---
+  frontend-checks:
+    name: Frontend (React & Build)
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: portal
+
+      - name: Lint (ESLint)
+        run: npm run lint
+        working-directory: portal
+
+      - name: Build Portal
+        run: npm run build
+        working-directory: portal
